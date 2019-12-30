@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection.Metadata;
 using System.Text;
 using Loans.Domain.Applications;
 using NUnit.Framework;
@@ -87,12 +88,20 @@ namespace Loans.Tests
                 sut.CompareMonthlyRepayments(new LoanTerm(30));
 
             //Don't care about the monthly repayment, only that the product is there
+            //Assert.That(comparisons, Has.Exactly(1)
+            //                                     .Property("ProductName").EqualTo("a")
+            //                                     .And
+            //                                     .Property("InterestRate").EqualTo(1)
+            //                                     .And
+            //                                     .Property("MonthlyRepayment").GreaterThan(0));
+
+            //The above has the issue of breaking if property names ever change
+            //Typesafe way of specifying conditions:
             Assert.That(comparisons, Has.Exactly(1)
-                                                    .Property("ProductName").EqualTo("a")
-                                                    .And
-                                                    .Property("InterestRate").EqualTo(1)
-                                                    .And
-                                                    .Property("MonthlyRepayment").GreaterThan(0));
+                                                 .Matches<MonthlyRepaymentComparison>(
+                                                     item => item.ProductName == "a" &&
+                                                             item.InterestRate == 1 &&
+                                                             item.MonthlyRepayment > 0));
         }
 
     }
