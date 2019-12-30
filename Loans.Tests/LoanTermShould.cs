@@ -1,6 +1,8 @@
-﻿using Loans.Domain.Applications;
+﻿using System;
+using Loans.Domain.Applications;
 using NUnit.Framework;
 using System.Collections.Generic;
+using System.Net.Sockets;
 
 namespace Loans.Tests
 {
@@ -71,6 +73,38 @@ namespace Loans.Tests
             Assert.That(a, Is.EqualTo(0.33).Within(0.004));
             //as a percent
             Assert.That(a, Is.EqualTo(0.33).Within(10).Percent);
+        }
+
+        [Test]
+        public void NotAllowZeroYears()
+        {
+            //check if particular error type is thrown
+            Assert.That(() => new LoanTerm(0), Throws.TypeOf<ArgumentOutOfRangeException>());
+
+            //check if particular error type is thrown with particular property having specific value
+            Assert.That(() => new LoanTerm(0), Throws.TypeOf<ArgumentOutOfRangeException>()
+                .With
+                .Property("Message")
+                .EqualTo("Please specify a value greater than 0. (Parameter 'years')"));
+
+            //checking the Error message of an error of type x
+            Assert.That(() => new LoanTerm(0), Throws.TypeOf<ArgumentOutOfRangeException>()
+                .With
+                .Message
+                .EqualTo("Please specify a value greater than 0. (Parameter 'years')"));
+
+            //checking the value of a particular Property
+            Assert.That(() => new LoanTerm(0), Throws.TypeOf<ArgumentOutOfRangeException>()
+                .With
+                .Property("ParamName")
+                .EqualTo("years"));
+
+            //same as above but using Matches extension with lambda
+            Assert.That(() => new LoanTerm(0), Throws.TypeOf<ArgumentOutOfRangeException>()
+                                                   .With
+                                                   .Matches<ArgumentOutOfRangeException>(
+                                                   e => e.ParamName == "years"));
+
         }
     }
 }
