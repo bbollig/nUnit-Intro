@@ -4,6 +4,7 @@ using System.Collections.Generic;
 
 namespace Loans.Tests
 {
+    [ProductComparison]
     public class ProductComparerShould
     {
         private List<LoanProduct> products;
@@ -49,7 +50,6 @@ namespace Loans.Tests
         }
 
         [Test]
-        [Category("Product Comparison")]
         public void ReturnCorrectNumberOfComparisons()
         {
             List<MonthlyRepaymentComparison> comparisons =
@@ -60,7 +60,6 @@ namespace Loans.Tests
         }
 
         [Test]
-        [Category("Product Comparison")]
         public void NotReturnDuplicateComparisons()
         {
             List<MonthlyRepaymentComparison> comparisons =

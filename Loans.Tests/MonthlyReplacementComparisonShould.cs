@@ -6,10 +6,10 @@ using NUnit.Framework;
 
 namespace Loans.Tests
 {
-    [Category("Product Comparison")]
     class MonthlyReplacementComparisonShould
     {
         [Test]
+        [ProductComparison]
         public void RespectValueEquality()
         {
             var a = new MonthlyRepaymentComparison("a", 42.42m, 22.22m);
@@ -19,6 +19,7 @@ namespace Loans.Tests
         }
 
         [Test]
+        [ProductComparison]
         public void RespectValueInequality()
         {
             var a = new MonthlyRepaymentComparison("a", 42.42m, 22.22m);
