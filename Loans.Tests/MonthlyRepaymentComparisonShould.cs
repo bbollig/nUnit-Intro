@@ -6,7 +6,7 @@ using NUnit.Framework;
 
 namespace Loans.Tests
 {
-    class MonthlyReplacementComparisonShould
+    class MonthlyRepaymentComparisonShould
     {
         [Test]
         [ProductComparison]
