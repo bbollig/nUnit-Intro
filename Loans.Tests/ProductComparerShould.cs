@@ -7,7 +7,6 @@ using NUnit.Framework;
 
 namespace Loans.Tests
 {
-    [TestFixture]
     public class ProductComparerShould
     {
         [Test]
