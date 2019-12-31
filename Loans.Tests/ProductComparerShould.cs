@@ -10,6 +10,7 @@ namespace Loans.Tests
     public class ProductComparerShould
     {
         [Test]
+        [Category("Product Comparison")]
         public void ReturnCorrectNumberOfComparisons()
         {
             //Arrange
@@ -30,6 +31,7 @@ namespace Loans.Tests
         }
 
         [Test]
+        [Category("Product Comparison")]
         public void NotReturnDuplicateComparisons()
         {
             //Arrange
