@@ -7,9 +7,11 @@ using System.Net.Sockets;
 namespace Loans.Tests
 {
     [TestFixture]
+    //[Ignore("Need to complete update work.")]
     public class LoanTermShould
     {
         [Test]
+        //[Ignore("Need to complete update work.")]
         public void ReturnTermInMonths()
         {
             //Constraint method of assertion is the new feature

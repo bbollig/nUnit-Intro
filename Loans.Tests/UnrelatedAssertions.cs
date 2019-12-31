@@ -5,7 +5,6 @@ using NUnit.Framework;
 
 namespace Loans.Tests
 {
-    [TestFixture]
     class UnrelatedAssertions
     {
 
