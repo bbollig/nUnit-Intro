@@ -87,11 +87,17 @@ namespace Loans.Tests
                 sut.CompareMonthlyRepayments(new LoanTerm(30));
 
             //TypeSafe way of specifying conditions:
-            Assert.That(comparisons, Has.Exactly(1)
-                                                 .Matches<MonthlyRepaymentComparison>(
-                                                     item => item.ProductName == "a" &&
-                                                             item.InterestRate == 1 &&
-                                                             item.MonthlyRepayment > 0));
+            //Assert.That(comparisons, Has.Exactly(1)
+            //                                     .Matches<MonthlyRepaymentComparison>(
+            //                                         item => item.ProductName == "a" &&
+            //                                                 item.InterestRate == 1 &&
+            //                                                 item.MonthlyRepayment > 0));
+
+            //If we have an assertion like above that gets repeated across multiple tests (hypothetically, in this case)
+            // we can create custom constraint class to handle this 
+            Assert.That(comparisons, 
+                Has.Exactly(1)
+                            .Matches(new MonthlyRepaymentGreaterThanZeroConstraint("a", 1)));
         }
     }
 }
