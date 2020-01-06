@@ -38,9 +38,16 @@ namespace Loans.Domain.Applications
 
             _identityVerifier.Initialize();
 
-            var isValidIdentity = _identityVerifier.Validate(application.GetApplicantName(),
-                                                             application.GetApplicantAge(),
-                                                             application.GetApplicantAddress());
+            //var isValidIdentity = _identityVerifier.Validate(application.GetApplicantName(),
+            //                                                 application.GetApplicantAge(),
+            //                                                 application.GetApplicantAddress());
+
+
+            //OUT VARIABLE SECTION
+            _identityVerifier.Validate(application.GetApplicantName(),
+                application.GetApplicantAge(),
+                application.GetApplicantAddress(),
+                out var isValidIdentity);
 
             if (!isValidIdentity)
             {
@@ -48,15 +55,32 @@ namespace Loans.Domain.Applications
                 return;
             }
 
+            //This section is supposed to work with ref type returns but isn't working. 
+            //Video has left something out, don't want to spend the time troubleshooting right now...
+            //IdentityVerificationStatus status = null;
 
-            _creditScorer.CalculateScore(application.GetApplicantName(),
-                                         application.GetApplicantAddress());
+            //_identityVerifier.Validate(application.GetApplicantName(),
+            //    application.GetApplicantAge(),
+            //    application.GetApplicantAddress(),
+            //    ref status);
 
-            if (_creditScorer.Score < MinimumCreditScore)
-            {
-                application.Decline();
-                return;
-            }
+            //if (!status.Passed)
+            //{
+            //    application.Decline();
+            //    return;
+            //}
+
+
+
+
+            //_creditScorer.CalculateScore(application.GetApplicantName(),
+            //                             application.GetApplicantAddress());
+
+            //if (_creditScorer.Score < MinimumCreditScore)
+            //{
+            //    application.Decline();
+            //    return;
+            //}
 
             application.Accept();
         }
