@@ -256,6 +256,11 @@ namespace Loans.Tests
                     "133 Pluralsight Dr., Draper, Utah"))
                 .Returns(true);
 
+            var expectedTime = new DateTime(2000, 1, 1);
+            //Here we can explicitly set up non-deterministic behavior to test
+            mockIdentityVerifier.Setup(x => x.GetCurrentTime())
+                                .Returns(expectedTime);
+
             var mockCreditScorer = new Mock<ICreditScorer>();
 
             mockCreditScorer.Setup(x => x.ScoreResult.ScoreValue.Score).Returns(300);
@@ -265,6 +270,7 @@ namespace Loans.Tests
             sut.Process((application));
 
             Assert.That(application.GetIsAccepted(), Is.True);
+            Assert.That(mockIdentityVerifier.Object.LastCheckTime, Is.EqualTo(expectedTime));
         }
 
 
