@@ -28,7 +28,7 @@ namespace Loans.Domain.Applications
         }
 
 
-        private bool CallService(string applicantName, int applicantAge, string applicantAddress)
+        public virtual bool CallService(string applicantName, int applicantAge, string applicantAddress)
         {
             // Make call to external service, interpret the response, and return result
 
