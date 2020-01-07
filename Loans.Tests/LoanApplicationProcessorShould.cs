@@ -182,11 +182,12 @@ namespace Loans.Tests
             sut.Process((application));
 
             //Behavior-based testing
-            //As seen in previous examples but deleted now, we can use MOQ's Is.Any to test cases where we want to check
+            //As seen in previous examples but deleted now, we can use MOQ's It.IsAny<> to test cases where we want to check
             //if parameters were sent but don't particularly care what was sent
             mockCreditScorer.Verify(x => x.CalculateScore(It.IsAny<string>(), It.IsAny<string>()));
 
-            //Here wer are Verifying that CalculateScore was called with specific parameters, with
+            //Here we are Verifying that CalculateScore was called with specific parameters, and ensuring that call
+            //happened only once.
             mockCreditScorer.Verify(x => x.CalculateScore(
                     "Sarah",
                     "133 Pluralsight Dr., Draper, Utah"),
