@@ -195,6 +195,50 @@ namespace Loans.Tests
         }
 
         [Test]
+        public void DeclineWhenCreditScoreError()
+        {
+            LoanProduct product = new LoanProduct(99, "Loan", 5.25m);
+            LoanAmount amount = new LoanAmount("USD", 200_000);
+
+            var application = new LoanApplication(
+                42,
+                product,
+                amount,
+                "Sarah",
+                25,
+                "133 Pluralsight Dr., Draper, Utah",
+                65_000);
+
+            var mockIdentityVerifier = new Mock<IIdentityVerifier>();
+
+            mockIdentityVerifier.Setup(x => x.Validate(
+                    "Sarah",
+                    25,
+                    "133 Pluralsight Dr., Draper, Utah"))
+                .Returns(true);
+
+            var mockCreditScorer = new Mock<ICreditScorer>();
+
+            mockCreditScorer.Setup(x => x.ScoreResult.ScoreValue.Score).Returns(300);
+
+            //Here we can test if an error gets thrown. We can specify type and even customize the error
+            //message, seen in the commented out portion below
+            mockCreditScorer.Setup(x => x.CalculateScore(It.IsAny<string>(), It.IsAny<string>()))
+                .Throws<InvalidOperationException>();
+                //.Throws(new InvalidOperationException("Test Exception"));
+
+            var sut = new LoanApplicationProcessor(mockIdentityVerifier.Object, mockCreditScorer.Object);
+
+            sut.Process((application));
+
+            mockCreditScorer.VerifyGet(x => x.ScoreResult.ScoreValue.Score, Times.Once);
+
+            mockCreditScorer.VerifySet(x => x.Count = 1);
+
+            Assert.That(application.GetIsAccepted(), Is.False);
+        }
+
+        [Test]
         public void NullReturnExample()
         {
             var mock = new Mock<IINullExample>();

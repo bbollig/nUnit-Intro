@@ -48,8 +48,17 @@ namespace Loans.Domain.Applications
                 return;
             }
 
-            _creditScorer.CalculateScore(application.GetApplicantName(),
-                                         application.GetApplicantAddress());
+            //we add this try catch to add a test case that checks if an error is thrown
+            try
+            {
+                _creditScorer.CalculateScore(application.GetApplicantName(),
+                                             application.GetApplicantAddress());
+            }
+            catch (Exception)
+            {
+                application.Decline();
+                return;
+            }
 
             _creditScorer.Count++;
 
