@@ -1,8 +1,7 @@
-﻿using System;
-using Loans.Domain.Applications;
+﻿using Loans.Domain.Applications;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
-using System.Net.Sockets;
 
 namespace Loans.Tests
 {
