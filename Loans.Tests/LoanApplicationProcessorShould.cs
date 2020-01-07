@@ -65,57 +65,34 @@ namespace Loans.Tests
             var mockIdentityVerifier = new Mock<IIdentityVerifier>();
 
             //In cases where we don't care what parameters are being sent, we can use MOQ's
-            //It.IsAny for parameter substitution, seen below
-            //To work, uncomment lines 41-43 in LoanApplicationProcessor.cs
-
-            //mockIdentityVerifier.Setup(x => x.Validate(
-            //    It.IsAny<string>(),
-            //    It.IsAny<int>(),
-            //    It.IsAny<string>()))
-            //    .Returns(true);
-
-            //But in this case, since we know what parameters we are setting up our LoanApplication
-            //with, it would be better to just use them in this case
-            //mockIdentityVerifier.Setup(x => x.Validate(
-            //        "Sarah",
-            //        25,
-            //        "133 Pluralsight Dr., Draper, Utah"))
-            //    .Returns(true);
-
-            //like above, but using an out variable instead
-            //To work, uncomment lines 47-56 in LoanApplicationProcessor.cs
-
-            bool isValidOutValue = true;
-
+            //It.IsAny for parameter substitution. But in this case, since we know what parameters
+            // we are setting up our LoanApplication//with, it would be better to just use them in this case
             mockIdentityVerifier.Setup(x => x.Validate(
-                "Sarah",
-                25,
-                "133 Pluralsight Dr., Draper, Utah",
-                out isValidOutValue));
-
-
-            //Like above, but using ref. This does not work!
-            //mockIdentityVerifier
-            //    .Setup(x => x.Validate("Sarah",
-            //        25,
-            //        "133 Pluralsight Drive, Draper, Utah",
-            //        ref It.Ref<IdentityVerificationStatus>.IsAny))
-            //    .Callback(new ValidateCallback(
-            //        (string applicantName,
-            //               int applicantAge,
-            //               string applicantAddress,
-            //               ref IdentityVerificationStatus status) =>
-            //                status = new IdentityVerificationStatus(true)));
-
-
+                    "Sarah",
+                    25,
+                    "133 Pluralsight Dr., Draper, Utah"))
+                .Returns(true);
 
             var mockCreditScorer = new Mock<ICreditScorer>();
+            //The following sets up the property hierarchy to return a valid credit score
+            mockCreditScorer.Setup(x => x.ScoreResult.ScoreValue.Score).Returns(300);
+            //The following tells MOQ to track changes to the Count property so that we can test
+            //it in the second assertion
+            mockCreditScorer.SetupProperty(x => x.Count);
+
+            //You can also automatically configure all properties for an object using
+            //mockCreditScorer.SetupAllProperties();
+            //instead of the SetupProperty method.
+            //However, the caveat here is that the above line would need to be placed above
+            //the Setup method because having it below would REconfigure our explicitly set
+            //ScoreResult.ScoreValue.Score of 300
 
             var sut = new LoanApplicationProcessor(mockIdentityVerifier.Object, mockCreditScorer.Object);
 
             sut.Process((application));
 
             Assert.That(application.GetIsAccepted(), Is.True);
+            Assert.That(mockCreditScorer.Object.Count, Is.EqualTo(1));
         }
 
         [Test]
