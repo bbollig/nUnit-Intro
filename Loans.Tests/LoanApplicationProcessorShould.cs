@@ -2,6 +2,7 @@
 using Loans.Domain.Applications;
 using NUnit.Framework;
 using Moq;
+using Moq.Protected;
 
 namespace Loans.Tests
 {
@@ -251,14 +252,27 @@ namespace Loans.Tests
 
             var mockIdentityVerifier = new Mock<IdentityVerifierServiceGateway>();
 
-            mockIdentityVerifier.Setup(x => x.CallService("Sarah",
-                    25,
-                    "133 Pluralsight Dr., Draper, Utah"))
-                .Returns(true);
+            //Here we can mock Protected class members by bringing in the Moq.Protected namespace (via using statement)
+            //And we have to explicitly name the protected member we wish to mock. 
+            mockIdentityVerifier.Protected().Setup<bool>("CallService",
+                                                         "Sarah",
+                                                         25,
+                                                         "133 Pluralsight Dr., Draper, Utah")
+                                .Returns(true);
+            //If we want to be able to get intellisense
+            //for protected members instead of explicitly stating them like below, we need to create an interface that defines those
+            //members we wish to mock and use slightly different syntax, shown here:
+            //mockIdentityVerifier.Protected()
+            //    .As<IIdentityVerifierServiceGatewayProtectedMembers>()
+            //    .Setup(x => x.CallService(It.IsAny<string>(),
+            //                              It.IsAny<int>(),
+            //                              It.IsAny<string>()))
+            //    .Returns(true);
+
 
             var expectedTime = new DateTime(2000, 1, 1);
             //Here we can explicitly set up non-deterministic behavior to test
-            mockIdentityVerifier.Setup(x => x.GetCurrentTime())
+            mockIdentityVerifier.Protected().Setup<DateTime>("GetCurrentTime")
                                 .Returns(expectedTime);
 
             var mockCreditScorer = new Mock<ICreditScorer>();
