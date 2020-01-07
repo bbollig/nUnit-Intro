@@ -231,10 +231,6 @@ namespace Loans.Tests
 
             sut.Process((application));
 
-            mockCreditScorer.VerifyGet(x => x.ScoreResult.ScoreValue.Score, Times.Once);
-
-            mockCreditScorer.VerifySet(x => x.Count = 1);
-
             Assert.That(application.GetIsAccepted(), Is.False);
         }
 
