@@ -235,6 +235,40 @@ namespace Loans.Tests
         }
 
         [Test]
+        public void AcceptUsingPartialMock()
+        {
+            LoanProduct product = new LoanProduct(99, "Loan", 5.25m);
+            LoanAmount amount = new LoanAmount("USD", 200_000);
+
+            var application = new LoanApplication(
+                42,
+                product,
+                amount,
+                "Sarah",
+                25,
+                "133 Pluralsight Dr., Draper, Utah",
+                65_000);
+
+            var mockIdentityVerifier = new Mock<IdentityVerifierServiceGateway>();
+
+            mockIdentityVerifier.Setup(x => x.CallService("Sarah",
+                    25,
+                    "133 Pluralsight Dr., Draper, Utah"))
+                .Returns(true);
+
+            var mockCreditScorer = new Mock<ICreditScorer>();
+
+            mockCreditScorer.Setup(x => x.ScoreResult.ScoreValue.Score).Returns(300);
+
+            var sut = new LoanApplicationProcessor(mockIdentityVerifier.Object, mockCreditScorer.Object);
+
+            sut.Process((application));
+
+            Assert.That(application.GetIsAccepted(), Is.True);
+        }
+
+
+        [Test]
         public void NullReturnExample()
         {
             var mock = new Mock<IINullExample>();
