@@ -21,7 +21,7 @@ namespace Loans.Domain.Applications
             return isValidIdentity;
         }
 
-        public virtual DateTime GetCurrentTime()
+        protected virtual DateTime GetCurrentTime()
         {
             return DateTime.Now;
         }
@@ -32,7 +32,7 @@ namespace Loans.Domain.Applications
         }
 
 
-        public virtual bool CallService(string applicantName, int applicantAge, string applicantAddress)
+        protected virtual bool CallService(string applicantName, int applicantAge, string applicantAddress)
         {
             // Make call to external service, interpret the response, and return result
 
