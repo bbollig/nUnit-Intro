@@ -15,12 +15,16 @@ namespace Loans.Domain.Applications
         {
             Connect();
             var isValidIdentity = CallService(applicantName, applicantAge, applicantAddress);
-            LastCheckTime = DateTime.Now;
+            LastCheckTime = GetCurrentTime();
             Disconnect();
 
             return isValidIdentity;
         }
 
+        public virtual DateTime GetCurrentTime()
+        {
+            return DateTime.Now;
+        }
 
         private void Connect()
         {
